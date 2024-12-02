@@ -20,12 +20,21 @@ def read_file(filename):
 
 
 def check_report(report: list):
+    #perf: instead of sorting O(n log n)
+    # we could iterate over an array to check if this condition: (a[0] > a[1])
+    # is the same for any a[i] a[i+1] -> O(n)
+    
     incr_sort = sorted(report)
     decr_sort = sorted(report, reverse=True)
     
     if report != incr_sort and report != decr_sort:
         return False
     
+    
+    # 1 2 3 4 -> 3
+    # 1 4 7 10 -> 9
+    #perf: maybe a stretch + could be prone to errors, but we could replace this O(n) check with
+    # O(1): 1*(count-1) <= abs(a[0] - a[-1]) <= 3*(count-1)
     for i in range(len(report)-1):
         num = report[i]
         next = report[i+1]
