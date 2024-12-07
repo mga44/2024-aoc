@@ -29,13 +29,6 @@ def parse_line(line:str):
 # found solution: 132*1+8+714+972*5+21*1=9151
 # return true if remaining result is eq to first elem, check - & / 
 def test_eq(intermediate_result: float, elements, index_of_tested, operator, solution: str) -> bool:
-    sum_el = sum(elements)
-    mul_el = reduce(mul, elements)
-    if sum_el == intermediate_result or mul_el == intermediate_result:
-        return True
-    
-    # if sum_el > intermediate_result or mul_el < intermediate_result:
-    #     return False
     
     if intermediate_result < 0 or not intermediate_result.is_integer():
         return False
@@ -65,46 +58,6 @@ def test_equation(test_eq, result, elements):
     return test_eq(result, elements, len(elements)-1, '-', f'={result}') or test_eq(result, elements, len(elements)-1, '/', f'={result}')
 
 
-def concat_list_elem(elements:list, result:int):
-    # if sum of elems is greater than result, it's not gonna work
-    #elements = elements.copy()
-    if len(elements) == 1:
-        if elements[0] == result:
-            return True # return true
-        else:
-            return False # return false
-    
-    
-    concatenated_lists = []
-    for i in range(len(elements)-1): # last one doesn't need separate run
-            
-        e1 = elements[i]
-        e2 = elements[i+1]
-        concat_var = int(str(e1)+str(e2))
-        if(concat_var > result):
-            continue
-    
-        ne2 = elements.copy()
-        ne2.pop(i+1)
-        ne2.pop(i)
-        ne2.insert(i, concat_var)
-        # test concats here - if true return true
-        if test_equation(test_eq, result, ne2):
-            return True
-        
-        # concatenated_lists.append(ne2)
-        if concat_list_elem(ne2, result):
-            return True
-    # for c in concatenated_lists:
-        # if concat_list_elem(c, result):
-            # return True
-        
-        
-    return False
-         
-        
-
-
 valid_test_results = []
 equations = list(map(lambda x: parse_line(x), lines))
 
@@ -117,10 +70,6 @@ for eq in equations:
         valid_test_results.append(result)
         continue
     
-    #eval concat
-    if concat_list_elem(elements, result):
-        valid_test_results.append(result)
-        continue
     
 
     
