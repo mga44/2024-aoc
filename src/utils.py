@@ -1,6 +1,6 @@
 def read_lines(filename:str) -> list:
     f = open(filename, "r")
-    return  f.readlines()
+    return f.readlines()
 
 def read_2d_array(filename:str) -> list:
     return [list(s.replace("\n", "")) for s in read_lines(filename)]
