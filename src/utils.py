@@ -14,3 +14,15 @@ def get_2d_array_size(arr):
 
 def print_2d_array(arr):
     print("\n".join("".join(i) for i in arr))
+
+def find_char_in_2d_array(arr, character, single=True) -> tuple|list:
+    result_list = []
+    for i, line in enumerate(arr):
+        for j, char in enumerate(line):
+            if char == character:
+                if single:
+                    return (j, i)
+                else:
+                    result_list.append((j,i))
+                    
+    return result_list
