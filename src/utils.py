@@ -50,7 +50,7 @@ def dijkstra_pathfind(start: tuple, grid:list, obstacle_char='#') -> list:
     max_x, max_y = get_2d_array_size(grid)
     
     visited = copy.deepcopy(grid)
-    visited[0][0] = 0
+    visited[start[1]][start[0]] = 0
     unvisited = {}
     for i in range(max_x + 1):
         for j in range(max_y + 1):
