@@ -4,7 +4,7 @@ import copy
 
 def read_lines(filename:str) -> list:
     f = open(filename, "r")
-    return [i.split() for i in f.readlines()]
+    return [i.strip() for i in f.readlines()]
 
 def read_2d_array(filename:str) -> list:
     return [list(s.replace("\n", "")) for s in read_lines(filename)]
