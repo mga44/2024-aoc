@@ -1,6 +1,7 @@
 from math import inf
 import heapq
 
+#TODO: document functions
 
 def read_lines(filename:str) -> list:
     f = open(filename, "r")
