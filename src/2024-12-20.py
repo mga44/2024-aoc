@@ -1,50 +1,53 @@
 import utils
 
 
-grid = utils.read_2d_array('resources\\2024-12-20.txt')
+grid = utils.read_2d_array("resources\\2024-12-20.txt")
 
-start = utils.find_char_in_2d_array(grid, 'S')
-end = utils.find_char_in_2d_array(grid, 'E')
+start = utils.find_char_in_2d_array(grid, "S")
+end = utils.find_char_in_2d_array(grid, "E")
 
+visited = utils.dijkstra_pathfind(start, grid)
 
-def dijkstra_pathfind(start: tuple, grid:list, obstacle_char='#') -> list:
-    max_x, max_y = get_2d_array_size(grid)
-    
-    visited = copy.deepcopy(grid)
-    visited[start[1]][start[0]] = 0
-    unvisited = {}
-    for i in range(max_x + 1):
-        for j in range(max_y + 1):
-            if grid[j][i] != obstacle_char:
-                unvisited[(i, j)] = inf
+distances = {}
+pos = visited[end[1]][end[0]]
+current_pos = end
+while True:
+    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    for dir in dirs:
+        next_pos = (*(dir[i] + current_pos[i] for i in range(len(current_pos))),)
+        next_in_line = (*(dir[i] + next_pos[i] for i in range(len(next_pos))),)
+        if not (
+            utils.in_bounds(grid, next_pos) and utils.in_bounds(grid, next_in_line)
+        ):
+            continue
 
-    unvisited[start] = 0
+        if next_pos in distances:
+            continue
 
-    while unvisited != {}:
-        min_unvisited_value = min(unvisited.values())
-        unvisited_min_nodes = list(
-            filter(lambda e: e[1] == min_unvisited_value, unvisited.items())
-        )
-        current_node = unvisited_min_nodes[0][0]
-        near_nodes = _get_neighbours(current_node, unvisited)
+        if (
+            grid[next_pos[1]][next_pos[0]] == "#"
+            and grid[next_in_line[1]][next_in_line[0]] in  ['.', 'S', 'E']
+        ):
+            grid[next_pos[1]][next_pos[0]] = "."
+            new_visited = utils.dijkstra_pathfind(start, grid)
+            new_distance = new_visited[end[1]][end[0]]["dist"]
+            distances[next_pos] = new_distance
+            grid[next_pos[1]][next_pos[0]] = "#"
 
-        current_distance = visited[current_node[1]][current_node[0]]
-        for next_node in near_nodes:
-            new_distance = current_distance + 1
-            old_dist = unvisited[next_node]
-            if old_dist > new_distance:
-                unvisited[next_node] = new_distance
-                visited[next_node[1]][next_node[0]] = new_distance
+    prev = pos["prev"]
+    current_pos = prev
+    if prev == ():
+        break
+    pos = visited[prev[1]][prev[0]]
 
-        unvisited.pop(current_node)
-        
-    return visited
+result = {}
+for d in distances.items():
+    possible_gain = visited[end[1]][end[0]]["dist"] - d[1]
+    if possible_gain in result:
+        result[possible_gain] += 1
+    else:
+        result[possible_gain] = 1
 
-visited = dijkstra_pathfind(start, grid)
+r = sum(value for key, value in result.items() if key >= 100)
+print(r) 
 
-print(f'Initial distance to {end} is {visited[end[1]][end[0]]}')
-
-
-"""
-    go over path
-"""
