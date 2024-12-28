@@ -10,7 +10,6 @@ from collections import defaultdict
 """
 
 line = utils.read_lines("resources\\2024-12-09.txt")[0]
-line = "2333133121414131402"
 
 def map_line(line:str):
     disk_map = []
@@ -66,43 +65,32 @@ if part_1:
         disk_map[space] = last_elem[0]
         disk_map[last_elem[1]] = "."
  
- 
-def get_elem(size_max):
-    elems = list(filter(lambda x: x[0] <=size_max, disk_entries))
-    if not elems:
-        return 
-    
-    
-    first_elem = elems[0]
-    print(f'removing {first_elem}')
-    disk_entries.remove(first_elem)
-    return first_elem
-    
     
 part_2 = True
 if part_2:
-    #space group: [ind_1, ind_2, ...]
-    for space_group in empty_space_groups:
-        while space_group != []:
-            group_len = len(space_group)
-            e = get_elem(group_len) 
-            if not e: 
-                break
-            
-            #e: (initial_number, file_id, [ind_1, ...])
-            for i in range(len(e[2])):
-                empty_ind = space_group[i]
-                file_ind = e[2][i]
-                
-                disk_map[empty_ind] = e[1]
-                disk_map[file_ind] = "."
-            
-            print(f'before {space_group}')
-            space_group = space_group[len(e[2]):] 
-            print(f'after {space_group}')               
+    for entry in disk_entries:
+        entry_len = entry[0]
+        entry_min_index = entry[2][0]
+        target= list(filter(lambda s: len(s) >= entry_len and s[0] < entry_min_index, empty_space_groups))
+        if not target:
+            continue
         
+        target.sort(key=lambda x: x[0])
+        t = target[0]
+        
+        empty_space_groups.remove(t)
+        tmp_t = t.copy()
+        for i in range(len(entry[2])):
+            empty_ind = t[i]
+            file_ind = entry[2][i]
             
-
+            disk_map[empty_ind] = entry[1]
+            disk_map[file_ind] = "."
+            
+            tmp_t.pop(0)
+        if tmp_t:
+            empty_space_groups.insert(0, tmp_t)    
+        
 checksum = 0
 for i in range(len(disk_map)):
     el = disk_map[i]
