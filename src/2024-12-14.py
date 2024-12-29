@@ -57,7 +57,7 @@ bots = list(map(lambda line: to_bot(line), bots))
 
 result = open("tmp", 'w')
 
-for sec in range(100):
+for sec in range(10000):
     print(f'Second {sec}', file=result)
     for bot in bots:
         p = bot["p"]
